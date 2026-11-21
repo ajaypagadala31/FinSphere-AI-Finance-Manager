@@ -96,6 +96,7 @@ def send_otp_email(email, code):
         "text": f"Your FinSphere OTP is {code}. It expires in 5 minutes."
     })
 
+
 def login_view(request):
     form = AuthenticationForm(request, data=request.POST or None)
 
@@ -126,7 +127,7 @@ def login_view(request):
             messages.success(request, "OTP sent to your registered email.")
             return redirect("verify")
 
-                except Exception as e:
+        except Exception as e:
             print(f"RESEND OTP ERROR: {e}")
             messages.error(
                 request,
@@ -139,6 +140,7 @@ def login_view(request):
         "btn": "Send OTP",
         "scene": "app"
     })
+
 
 
 def verify_otp(request):
