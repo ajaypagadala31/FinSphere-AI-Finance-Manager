@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}{% block title %}Forecast{% endblock %}{% block content %}
+<h1>Expense <span class="grad">forecast</span></h1>
+<p class="muted">Ridge regression on trend + seasonality + last two months. Evaluated on the final {{ m.test_months }} months, which the model never saw during training.</p>
+<div class="stats">
+  <div class="stat"><b>{{ m.mae|floatformat:0 }}</b><span>MAE (avg error / month)</span></div>
+  <div class="stat"><b>{{ m.rmse|floatformat:0 }}</b><span>RMSE</span></div>
+  <div class="stat"><b>{{ m.r2|floatformat:2 }}</b><span>R² (test)</span></div>
+  <div class="stat"><b>{{ m.mape|floatformat:1 }}%</b><span>MAPE</span></div>
+  <div class="stat"><b>{{ m.baseline_mae|floatformat:0 }}</b><span>naive baseline MAE</span></div>
+</div>
+<div class="card glass chartbox"><canvas id="chart"></canvas></div>
+{{ res|json_script:"fc-data" }}{% endblock %}
+{% block scripts %}{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="{% static 'core/js/forecast.js' %}"></script>{% endblock %}

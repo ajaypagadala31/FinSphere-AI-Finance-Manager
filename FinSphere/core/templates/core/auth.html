@@ -1,0 +1,8 @@
+{% extends 'core/base.html' %}{% block title %}{{ title }}{% endblock %}{% block content %}
+<section class="narrow"><form method="post" class="card glass tilt">{% csrf_token %}
+  <h2>{{ title }}</h2>
+  {{ form.non_field_errors }}
+  {% for f in form %}<label>{{ f.label }}{{ f }}{% if f.help_text %}<small>{{ f.help_text|safe }}</small>{% endif %}{{ f.errors }}</label>{% endfor %}
+  <button class="btn">{{ btn }}</button>
+  <p class="muted">{% if 'Sign in' in title %}New here? <a href="{% url 'signup' %}">Create an account</a>{% else %}Have an account? <a href="{% url 'login' %}">Sign in</a>{% endif %}</p>
+</form></section>{% endblock %}

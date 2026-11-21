@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}{% block content %}
+<section class="hero">
+  <p class="eyebrow">AI · FORECASTING · CLUSTERING</p>
+  <h1>See your money<br>in <span class="grad">three dimensions.</span></h1>
+  <p class="lead">FinSphere clusters your spending behaviour, forecasts next month's expenses with a trend-and-seasonality model, and turns the surplus into an investment plan.</p>
+  <div class="cta"><a class="btn" href="{% url 'signup' %}">Create free account</a><a class="btn ghost" href="{% url 'login' %}">Sign in with OTP</a></div>
+  <div class="grid3">
+    <div class="card tilt"><h3>⬡ 3D clusters</h3><p>K-Means groups categories into High-, Mid- and Low-impact. Orbit them in 3D.</p></div>
+    <div class="card tilt"><h3>↗ Honest forecasts</h3><p>Chronological train/test split, MAE / RMSE / R² and a naive baseline - no inflated accuracy.</p></div>
+    <div class="card tilt"><h3>◎ Smart budget</h3><p>Pick any month and income; get a predicted spend and a suggested allocation.</p></div>
+  </div>
+</section>{% endblock %}

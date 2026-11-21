@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}{% block title %}Feedback{% endblock %}{% block content %}
+<h1>Your <span class="grad">feedback</span></h1>
+<form method="post" class="card glass">{% csrf_token %}
+  <label>How was your experience?<textarea name="text" maxlength="500" rows="4" required></textarea></label>
+  <button class="btn">Submit</button>
+</form>
+<div class="stats">
+  <div class="stat"><b>{{ stats.Positive|default:0 }}</b><span>positive</span></div>
+  <div class="stat"><b>{{ stats.Neutral|default:0 }}</b><span>neutral</span></div>
+  <div class="stat"><b>{{ stats.Negative|default:0 }}</b><span>negative</span></div>
+</div>
+{% if mine %}<div class="card glass"><h3>Your recent feedback</h3>
+  {% for f in mine %}<p><span class="tag s{{ f.sentiment }}">{{ f.sentiment }}</span> {{ f.text }}</p>{% endfor %}</div>{% endif %}{% endblock %}

@@ -1,0 +1,4 @@
+Django>=5.1,<5.3
+numpy>=1.26
+pandas>=2.2
+vaderSentiment>=3.3.2

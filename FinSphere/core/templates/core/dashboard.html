@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}{% block title %}Home{% endblock %}{% block content %}
+<h1>Welcome, <span class="grad">{{ user.username }}</span></h1>
+<div class="stats">
+  <div class="stat"><b>{{ info.clean_rows }}</b><span>transactions</span></div>
+  <div class="stat"><b>{{ info.categories }}</b><span>categories</span></div>
+  <div class="stat"><b>{{ info.start }} → {{ info.end }}</b><span>period</span></div>
+  <div class="stat"><b>{{ info.total|floatformat:0 }}</b><span>total spend</span></div>
+</div>
+<div class="grid3">
+  <a class="card tilt" href="{% url 'dataset' %}"><h3>1 · Dataset</h3><p>Load, clean and profile the budget data.</p></a>
+  <a class="card tilt" href="{% url 'clusters' %}"><h3>2 · 3D Clusters</h3><p>K-Means spending behaviour, interactive.</p></a>
+  <a class="card tilt" href="{% url 'forecast' %}"><h3>3 · Forecast</h3><p>Model accuracy and a 6-month outlook.</p></a>
+  <a class="card tilt" href="{% url 'budget' %}"><h3>4 · Budget</h3><p>Pick a month → predicted spend + plan.</p></a>
+  <a class="card tilt" href="{% url 'feedback' %}"><h3>5 · Feedback</h3><p>Sentiment-scored user feedback.</p></a>
+</div>{% endblock %}

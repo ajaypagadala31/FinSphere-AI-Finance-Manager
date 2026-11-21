@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}{% block title %}Dataset{% endblock %}{% block content %}
+<h1>Dataset <span class="grad">overview</span></h1>
+<div class="stats">
+  <div class="stat"><b>{{ info.raw_rows }}</b><span>raw rows</span></div>
+  <div class="stat"><b>{{ info.removed }}</b><span>removed (missing / invalid)</span></div>
+  <div class="stat"><b>{{ info.clean_rows }}</b><span>clean rows</span></div>
+  <div class="stat"><b>{{ info.start }} → {{ info.end }}</b><span>period</span></div>
+</div>
+<div class="card glass"><h3>Spend by category</h3>
+  {% for c in cats %}<div class="bar"><span>{{ c.category }}</span><i style="--w:{{ c.share }}%"></i><em>{{ c.total|floatformat:0 }} · {{ c.share }}%</em></div>{% endfor %}
+</div>
+<div class="card glass"><h3>Latest transactions</h3><div class="scroll"><table>
+  <tr><th>Date</th><th>Category</th><th>Amount</th></tr>
+  {% for r in preview %}<tr><td>{{ r.date_time }}</td><td>{{ r.category }}</td><td>{{ r.amount|floatformat:2 }}</td></tr>{% endfor %}
+</table></div></div>{% endblock %}

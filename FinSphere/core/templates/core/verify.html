@@ -1,0 +1,7 @@
+{% extends 'core/base.html' %}{% block title %}Verify{% endblock %}{% block content %}
+<section class="narrow"><form method="post" class="card glass tilt">{% csrf_token %}
+  <h2>Enter your OTP</h2>
+  <p class="muted">We sent a 6-digit code to your e-mail.{% if dev %} <b>Dev mode:</b> the e-mail is printed in the VS Code terminal running the server.{% endif %}</p>
+  <input class="otp" name="code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••" autofocus required>
+  <button class="btn">Verify &amp; continue</button>
+</form></section>{% endblock %}

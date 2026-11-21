@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}{% block title %}Clusters{% endblock %}{% block content %}
+<h1>Spending <span class="grad">clusters</span> in 3D</h1>
+<p class="muted">Drag to orbit · scroll to zoom · hover a sphere. Axes: total spend (x), average transaction (y), frequency (z). Sphere size = total spend.</p>
+<div class="stage glass" id="cluster3d"><div id="tip" class="tip"></div></div>
+<div class="legend"><span><i class="c0"></i>High-impact</span><span><i class="c1"></i>Mid-range</span><span><i class="c2"></i>Low-impact</span></div>
+<div class="card glass"><div class="scroll"><table>
+  <tr><th>Category</th><th>Cluster</th><th>Total</th><th>Avg txn</th><th>Txns</th></tr>
+  {% for c in data %}<tr><td>{{ c.category }}</td><td><span class="tag c{{ c.cluster }}">{{ c.label }}</span></td><td>{{ c.total|floatformat:0 }}</td><td>{{ c.avg|floatformat:2 }}</td><td>{{ c.count }}</td></tr>{% endfor %}
+</table></div></div>
+{{ data|json_script:"cluster-data" }}{% endblock %}
+{% block scripts %}{% load static %}<script type="module" src="{% static 'core/js/clusters.js' %}"></script>{% endblock %}
