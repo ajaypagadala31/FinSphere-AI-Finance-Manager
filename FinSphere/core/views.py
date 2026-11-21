@@ -126,7 +126,8 @@ def login_view(request):
             messages.success(request, "OTP sent to your registered email.")
             return redirect("verify")
 
-        except Exception:
+                except Exception as e:
+            print(f"RESEND OTP ERROR: {e}")
             messages.error(
                 request,
                 "Unable to send OTP. Please try again later."
@@ -137,7 +138,7 @@ def login_view(request):
         "title": "Sign in",
         "btn": "Send OTP",
         "scene": "app"
-    })"btn": "Send OTP", "scene": "app"})
+    })
 
 
 def verify_otp(request):
