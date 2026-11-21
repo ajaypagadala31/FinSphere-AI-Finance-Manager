@@ -1,4 +1,5 @@
-import secrets, time
+import secrets, time, os
+import resend
 from functools import lru_cache
 from pathlib import Path
 
@@ -12,7 +13,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from django.db.models import Count
 from django.shortcuts import redirect, render
 
@@ -67,17 +67,77 @@ def signup(request):
         return redirect("login")
     return render(request, "core/auth.html", {"form": form, "title": "Create account", "btn": "Sign up", "scene": "app"})
 
+def send_otp_email(email, code):
+    api_key = os.environ.get("RESEND_API_KEY")
+
+    if not api_key:
+        raise RuntimeError("RESEND_API_KEY is not configured")
+
+    resend.api_key = api_key
+
+    sender = os.environ.get(
+        "RESEND_FROM_EMAIL",
+        "FinSphere <onboarding@resend.dev>"
+    )
+
+    return resend.Emails.send({
+        "from": sender,
+        "to": [email],
+        "subject": "Your FinSphere sign-in code",
+        "html": f"""
+            <div style="font-family: Arial, sans-serif;">
+                <h2>FinSphere Verification</h2>
+                <p>Your one-time sign-in code is:</p>
+                <h1 style="letter-spacing: 6px;">{code}</h1>
+                <p>This code expires in 5 minutes.</p>
+                <p>If you did not request this code, ignore this email.</p>
+            </div>
+        """,
+        "text": f"Your FinSphere OTP is {code}. It expires in 5 minutes."
+    })
 
 def login_view(request):
     form = AuthenticationForm(request, data=request.POST or None)
+
     if request.method == "POST" and form.is_valid():
         user = form.get_user()
+
+        if not user.email:
+            messages.error(request, "Your account has no registered email.")
+            return render(request, "core/auth.html", {
+                "form": form,
+                "title": "Sign in",
+                "btn": "Send OTP",
+                "scene": "app"
+            })
+
         code = f"{secrets.randbelow(10 ** 6):06d}"
-        request.session["otp"] = {"uid": user.pk, "hash": make_password(code), "exp": time.time() + 300, "tries": 0}
-        send_mail("Your FinSphere sign-in code", f"Your one-time code is {code}. It expires in 5 minutes.",
-                  None, [user.email or "unknown@example.com"])
-        return redirect("verify")
-    return render(request, "core/auth.html", {"form": form, "title": "Sign in", "btn": "Send OTP", "scene": "app"})
+
+        try:
+            send_otp_email(user.email, code)
+
+            request.session["otp"] = {
+                "uid": user.pk,
+                "hash": make_password(code),
+                "exp": time.time() + 300,
+                "tries": 0
+            }
+
+            messages.success(request, "OTP sent to your registered email.")
+            return redirect("verify")
+
+        except Exception:
+            messages.error(
+                request,
+                "Unable to send OTP. Please try again later."
+            )
+
+    return render(request, "core/auth.html", {
+        "form": form,
+        "title": "Sign in",
+        "btn": "Send OTP",
+        "scene": "app"
+    })"btn": "Send OTP", "scene": "app"})
 
 
 def verify_otp(request):
